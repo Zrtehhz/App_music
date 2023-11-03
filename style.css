@@ -1,0 +1,14 @@
+.music-item {
+    display: flex;
+    width: 90%;
+  }
+  
+  .music-item img {
+padding-bottom: 15px;
+padding: 5px;
+}
+  
+  .music-item p {
+    margin-left: 10px; 
+    margin-top: 15px;
+}

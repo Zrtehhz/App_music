@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>App_music</title>
+</head>
+<body>
+    <div class="audio-player">
+
+        <div class="meta-data">
+          <span class="title">Titre de la chanson</span>
+          <span class="artist">Nom de l'artiste</span>
+        </div>
+      
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      
+        <div class="controls">
+          <button class="prev btn btn-light btn-sm"><i class="fas fa-backward"></i></button>  
+          <button class="play btn btn-light btn-sm"><i class="fas fa-play"></i></button>
+          <button class="next btn btn-light btn-sm"><i class="fas fa-forward"></i></button>
+        </div>
+      
+      </div>
+      <style>
+        .audio-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+.meta-data {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.progress {
+  width: 100%;
+  height: 5px;
+  background-color: #ddd;
+  border-radius: 5px; 
+  overflow: hidden;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 30px 0;
+  width: 100%;
+}
+
+button {
+  background-color: transparent;
+  color: #555;
+  border: none;
+}
+
+button:hover {
+  color: #333;
+}
+      </style>
+</body>
+</html>
