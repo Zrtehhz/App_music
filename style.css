@@ -1,6 +1,8 @@
 .music-item {
     display: flex;
-    width: 90%;
+    width: 100%;
+    background-color: #f9f9f9;
+    border: 5px solid #9400d3; 
   }
   
   .music-item img {
@@ -11,4 +13,12 @@ padding: 5px;
   .music-item p {
     margin-left: 10px; 
     margin-top: 15px;
+}
+
+body {
+  background-color: #adadad;
+}
+
+p {
+  color: #0c0c0c;
 }
