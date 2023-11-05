@@ -7,9 +7,9 @@ async function fetchMusic() {
       params: {
         key: 'AIzaSyDFfCoDtVA0JvttwHsfkrcL_I-kbc39rOk',
         part: 'snippet',
-        maxResults: 20,
+        maxResults: 200,
         type: 'video',
-        q: 'gta rp music'
+        q: 'gta rp musique RAP Flashback'
       }
     });
     
@@ -49,7 +49,7 @@ function initMusicItems() {
 
 function handleMusicItemClick(event) {
   const videoId = event.currentTarget.dataset.videoId;
-  window.location.href = `player.html?videoId=${videoId}`;
+  window.location.href = `../player/player.html?videoId=${videoId}`;
 }
 
 fetchMusic();

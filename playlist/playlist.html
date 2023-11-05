@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <title>App_music - playlists</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="../index.html">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../playlist/playlist.html">Mes Musiques</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#songModal">Ajouter une musique</button>
+    <div id="songsContainer" class="p-3"></div>
+    
+    <div class="modal fade" id="songModal" tabindex="-1" aria-labelledby="songModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="songModalLabel">Nouvelle musique</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control mb-3" id="songTitle" placeholder="Entrez le titre de la musique">
+                    <input type="text" class="form-control mb-3" id="songThumbnail" placeholder="Entrez l'URL de la miniature de la musique">
+                    <input type="text" class="form-control" id="songURL" placeholder="Copiez l'URL de la musique ici">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="saveSong">Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="songsContainer" class="p-3"></div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation des musiques
+    loadSongs();
+
+    function generateUUID() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
+
+var saveButton = document.getElementById('saveSong');
+saveButton.addEventListener('click', function() {
+    let songTitle = document.getElementById('songTitle').value;
+    var songThumbnail = document.getElementById('songThumbnail').value;
+    var songURL = document.getElementById('songURL').value;
+    if (songTitle && songThumbnail && songURL) {
+        var songs = JSON.parse(localStorage.getItem('songs') || '[]');
+        songs.push({
+            id: generateUUID(),
+            title: songTitle,
+            thumbnail: songThumbnail,
+        });
+        localStorage.setItem('songs', JSON.stringify(songs));
+        var songModalEl = document.getElementById('songModal');
+        var songModal = bootstrap.Modal.getInstance(songModalEl);
+        songModal.hide();
+        loadSongs();
+    }
+});
+
+});
+function getsongedIdSongIdFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('id'); // 'id' est le nom du paramètre dans l'URL
+}
+
+const songedId = getsongedIdSongIdFromUrl();
+if (songedId) {
+} else {
+  console.error('Aucun ID de musique trouvé dans l\'URL.');
+}
+
+function extractVideoID(url) {
+    var regExp = /^.*(youtu\.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/;
+    var match = url.match(regExp);
+
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+const API_KEY = 'AIzaSyDFfCoDtVA0JvttwHsfkrcL_I-kbc39rOk';
+
+function getVideoDetails(videoId, callback) {
+    fetch(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&part=snippet`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.items.length === 0) {
+                console.error('Aucun détail trouvé pour l\'ID de la vidéo donné.');
+                return;
+            }
+            callback(data.items[0].snippet.title);
+        })
+        .catch(error => console.error('Erreur lors de la récupération des détails de la vidéo:', error));
+}
+
+// Utilisez cette fonction pour obtenir le titre de la vidéo
+var videoId = extractVideoID(url); // Assurez-vous que vous avez extrait l'ID de la vidéo correctement
+if (videoId) {
+    getVideoDetails(videoId, function(title) {
+        console.log('Le titre de la vidéo est:', title);
+        // Vous pouvez mettre à jour l'interface utilisateur ici avec le titre de la vidéo
+    });
+} else {
+    console.error('L\'ID de la vidéo est invalide.');
+}
+
+
+function loadSongs() {
+    var songs = JSON.parse(localStorage.getItem('songs') || '[]');
+    var container = document.getElementById('songsContainer');
+    container.innerHTML = '';
+
+    songs.forEach(function(song) {
+        var rowDiv = document.createElement('div');
+        rowDiv.className = 'row mb-3';
+        rowDiv.dataset.songId = song.id;
+
+        // Supposons que song.url contient l'URL vers la page YouTube de la chanson
+        var videoId = extractVideoID(song.url);
+        var songThumbnail = `https://img.youtube.com/vi/${videoId}/0.jpg`; // Miniature YouTube standard
+      
+              // A fixe demain titre 
+
+      
+        var songTitle = songTitle; // Ici vous devriez mettre le vrai titre que vous pouvez obtenir via l'API YouTube ou d'une autre manière
+
+        // A fixe demain titre 
+
+
+        rowDiv.innerHTML = `
+            <div class="col">
+                <img src="${songThumbnail}" class="img-fluid" alt="Miniature">
+                <div class="song-title">${songTitle}</div>
+            </div>
+        `;
+
+        // Ajoutez un écouteur d'événement pour ouvrir le player
+        rowDiv.addEventListener('click', function() {
+            window.location.href = `player.html?id=${song.id}`; // Redirection vers player avec ID de musique
+        });
+
+        container.appendChild(rowDiv);
+    });
+}
+
+
+
+loadSongs();
+
+    </script>
+</body>
+</html>
