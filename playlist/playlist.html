@@ -6,7 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <title>App_music - playlists</title>
 </head>
-<body>
+<body class="bg-dark">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,23 +68,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
 var saveButton = document.getElementById('saveSong');
 saveButton.addEventListener('click', function() {
-    let songTitle = document.getElementById('songTitle').value;
-    var songThumbnail = document.getElementById('songThumbnail').value;
     var songURL = document.getElementById('songURL').value;
-    if (songTitle && songThumbnail && songURL) {
-        var songs = JSON.parse(localStorage.getItem('songs') || '[]');
-        songs.push({
-            id: generateUUID(),
-            title: songTitle,
-            thumbnail: songThumbnail,
-        });
-        localStorage.setItem('songs', JSON.stringify(songs));
-        var songModalEl = document.getElementById('songModal');
-        var songModal = bootstrap.Modal.getInstance(songModalEl);
-        songModal.hide();
-        loadSongs();
+    if (songURL) {
+        var videoId = extractVideoID(songURL); // Assurez-vous d'avoir l'ID de la vidéo
+        if (videoId) {
+            getVideoDetails(videoId, function(title) {
+                // Maintenant que vous avez le titre, sauvegardez la chanson avec ce titre
+                var songs = JSON.parse(localStorage.getItem('songs') || '[]');
+                songs.push({
+                    id: generateUUID(),
+                    title: title, // Utilisez le titre obtenu de l'API
+                    thumbnail: `https://img.youtube.com/vi/${videoId}/0.jpg`,
+                    url: songURL // Sauvegardez aussi l'URL pour une utilisation ultérieure
+                });
+                localStorage.setItem('songs', JSON.stringify(songs));
+                
+                var songModalEl = document.getElementById('songModal');
+                var songModal = bootstrap.Modal.getInstance(songModalEl);
+                songModal.hide();
+                loadSongs(); // Rechargez la liste des chansons
+            });
+        } else {
+            console.error('L\'ID de la vidéo est invalide.');
+        }
     }
 });
+
 
 });
 function getsongedIdSongIdFromUrl() {
@@ -141,34 +150,24 @@ function loadSongs() {
         rowDiv.className = 'row mb-3';
         rowDiv.dataset.songId = song.id;
 
-        // Supposons que song.url contient l'URL vers la page YouTube de la chanson
-        var videoId = extractVideoID(song.url);
-        var songThumbnail = `https://img.youtube.com/vi/${videoId}/0.jpg`; // Miniature YouTube standard
-      
-              // A fixe demain titre 
-
-      
-        var songTitle = songTitle; // Ici vous devriez mettre le vrai titre que vous pouvez obtenir via l'API YouTube ou d'une autre manière
-
-        // A fixe demain titre 
-
+        var songThumbnail = song.thumbnail; // Utilisez la miniature enregistrée
+        var songTitle = song.title; // Utilisez le titre enregistré
 
         rowDiv.innerHTML = `
             <div class="col">
-                <img src="${songThumbnail}" class="img-fluid" alt="Miniature">
+                <img src="${songThumbnail}" class="img-fluid" alt="${songTitle}">
                 <div class="song-title">${songTitle}</div>
             </div>
         `;
 
         // Ajoutez un écouteur d'événement pour ouvrir le player
         rowDiv.addEventListener('click', function() {
-            window.location.href = `player.html?id=${song.id}`; // Redirection vers player avec ID de musique
+            window.location.href = `../player/player.html?videoId=${song.id}`; // Redirection vers player avec ID de musique
         });
 
         container.appendChild(rowDiv);
     });
 }
-
 
 
 loadSongs();

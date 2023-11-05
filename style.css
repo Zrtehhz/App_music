@@ -1,8 +1,10 @@
+
 .music-item {
     display: flex;
     width: 100%;
     background-color: #f9f9f9;
     border: 5px solid #9400d3; 
+    margin-top: 15px;
   }
   
   .music-item img {
@@ -22,3 +24,9 @@ body {
 p {
   color: #0c0c0c;
 }
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+}
+
