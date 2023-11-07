@@ -135,8 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(updatePlayerUI, 1000);
 });
 
-// Plus besoin de ce code qui était destiné au fakeAudio
-// ...
 
 // Intégrez ceci dans votre fonction onPlayerReady
 function onPlayerReady(event) {
@@ -147,3 +145,35 @@ function onPlayerReady(event) {
   // Plus besoin d'ajouter des gestionnaires d'événements ici,
   // car nous avons déjà ajouté l'écouteur d'événements ci-dessus
 }
+
+// Récupérer les éléments du DOM
+const volumeBtn = document.querySelector('.volume-btn');
+const volumeControls = document.querySelector('.volume-controls');
+const volumeSlider = document.querySelector('.slider');
+const volumePin = document.querySelector('#volume-pin');
+
+// Récupérer la vidéo  
+const video = document.querySelector('video');
+
+// Afficher/Masquer les contrôles du volume
+volumeBtn.addEventListener('click', () => {
+  volumeControls.classList.toggle('hidden');
+});
+
+// Mettre à jour le volume lors du déplacement du slider
+volumeSlider.addEventListener('input', (e) => {
+  const value = e.target.value;
+  video.volume = value / 100;
+});
+
+// Mettre à jour la position du slider selon le volume
+const updateSlider = () => {
+  const volume = Math.round(video.volume * 100);
+  volumeSlider.value = volume;
+  volumePin.style.bottom = `${volume}%`;
+};
+
+video.addEventListener('volumechange', updateSlider);
+
+// Initialiser 
+updateSlider();

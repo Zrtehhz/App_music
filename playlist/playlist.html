@@ -1,60 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <title>App_music - playlists</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <title>App Music - Playlists</title>
 </head>
+
 <body class="bg-dark">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../index.html">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../playlist/playlist.html">Mes Musiques</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#songModal">Ajouter une musique</button>
-    <div id="songsContainer" class="p-3"></div>
-    
-    <div class="modal fade" id="songModal" tabindex="-1" aria-labelledby="songModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="songModalLabel">Nouvelle musique</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control mb-3" id="songTitle" placeholder="Entrez le titre de la musique">
-                    <input type="text" class="form-control mb-3" id="songThumbnail" placeholder="Entrez l'URL de la miniature de la musique">
-                    <input type="text" class="form-control" id="songURL" placeholder="Copiez l'URL de la musique ici">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-primary" id="saveSong">Valider</button>
-                </div>
-            </div>
-        </div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="../index.html">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../playlist/playlist.html">Mes Musiques</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#songModal">Ajouter une musique</button>
+  <div id="songsContainer" class="p-3"></div>
 
-    <div id="songsContainer" class="p-3"></div>
+  <div class="modal fade" id="songModal" tabindex="-1" aria-labelledby="songModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="songModalLabel">Nouvelle musique</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control mb-3" id="songTitle" placeholder="Entrez le titre de la musique">
+          <input type="text" class="form-control mb-3" id="songThumbnail" placeholder="Entrez l'URL de la miniature de la musique">
+          <input type="text" class="form-control" id="songURL" placeholder="Copiez l'URL de la musique ici">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" id="saveSong">Valider</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div id="songsContainer" class="p-3"></div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation des musiques
     loadSongs();
@@ -79,7 +81,7 @@ saveButton.addEventListener('click', function() {
                     id: generateUUID(),
                     title: title, // Utilisez le titre obtenu de l'API
                     thumbnail: `https://img.youtube.com/vi/${videoId}/0.jpg`,
-                    url: songURL // Sauvegardez aussi l'URL pour une utilisation ultérieure
+                    songURL: songURL // Sauvegardez aussi l'URL pour une utilisation ultérieure
                 });
                 localStorage.setItem('songs', JSON.stringify(songs));
                 
@@ -161,9 +163,10 @@ function loadSongs() {
         `;
 
         // Ajoutez un écouteur d'événement pour ouvrir le player
-        rowDiv.addEventListener('click', function() {
-            window.location.href = `../player/player.html?videoId=${song.id}`; // Redirection vers player avec ID de musique
-        });
+        function handleMusicItemClick(event) {
+  const videoId = event.currentTarget.dataset.videoId;
+  window.location.href = `../player/player.html?videoId=${videoId}`;
+}
 
         container.appendChild(rowDiv);
     });
