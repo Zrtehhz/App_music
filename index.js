@@ -49,7 +49,7 @@ function initMusicItems() {
 
 function handleMusicItemClick(event) {
   const videoId = event.currentTarget.dataset.videoId;
-  window.location.href = `../player/player.html?videoId=${videoId}`;
+  window.location.href = `./player/player.html?videoId=${videoId}`;
 }
 
 fetchMusic();
