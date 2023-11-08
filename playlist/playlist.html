@@ -103,6 +103,10 @@ function loadSongs() {
     var songs = JSON.parse(localStorage.getItem('songs') || '[]');
     var container = document.getElementById('songsContainer');
     container.innerHTML = '';
+    container.style.width = '250px';
+    container.style.height = '250px';
+    container.style.display = 'flex';
+
 
     songs.forEach(function(song) {
         var rowDiv = document.createElement('div');
