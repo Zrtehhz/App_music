@@ -115,7 +115,7 @@ function loadSongs() {
 
         // Ajout de l'écouteur d'événement pour la redirection
         rowDiv.querySelector('.song-thumbnail').addEventListener('click', function() {
-            window.location.href = `../player/player.html?videoId=${song.id}`;
+            window.location.href = `../../player/player.html?videoId=${song.id}`;
         });
 
         container.appendChild(rowDiv);
