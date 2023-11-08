@@ -98,6 +98,7 @@
 
     // Fonction pour charger et afficher les chansons
 // Fonction pour charger et afficher les chansons
+// Fonction pour charger et afficher les chansons
 function loadSongs() {
     var songs = JSON.parse(localStorage.getItem('songs') || '[]');
     var container = document.getElementById('songsContainer');
@@ -106,9 +107,11 @@ function loadSongs() {
     songs.forEach(function(song) {
         var rowDiv = document.createElement('div');
         rowDiv.className = 'row mb-3';
+        // Utilisez une URL de miniature de test pour vérifier que l'affichage fonctionne
+        var testThumbnailUrl = 'https://via.placeholder.com/150'; // URL de substitution pour le test
         rowDiv.innerHTML = `
             <div class="col">
-                <img src="${song.thumbnail}" class="img-fluid song-thumbnail" alt="${song.title}" data-video-id="${song.id}">
+                <img src="${testThumbnailUrl}" class="img-fluid song-thumbnail" alt="${song.title}" data-video-id="${song.id}">
                 <div class="song-title">${song.title}</div>
             </div>
         `;
@@ -122,8 +125,18 @@ function loadSongs() {
     });
 }
 
+// Ajoutez la chanson de test dans le localStorage pour l'affichage
+var testSong = {
+    id: 'testVideoId',
+    title: 'Test Song',
+    thumbnail: 'https://via.placeholder.com/150',
+    url: 'https://www.example.com'
+};
+localStorage.setItem('songs', JSON.stringify([testSong]));
+
 // Assurez-vous que cette fonction est appelée après que l'utilisateur ait ajouté une chanson
 loadSongs();
+
 
     // Extraction de l'ID vidéo YouTube à partir de l'URL
     function extractVideoID(url) {
