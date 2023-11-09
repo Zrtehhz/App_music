@@ -60,9 +60,7 @@
         </div>
         <div class="volume">
             <div class="volume-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path fill="#566574" d="M14.667 0v2.747c3.853 1.146 6.666 4.72 6.666 8.946 0 4.227-2.813 7.787-6.666 8.934v2.76C20 22.173 24 17.4 24 11.693 24 5.987 20 1.213 14.667 0zM18 11.693c0-2.36-1.333-4.386-3.333-5.373v10.707c2-.947 3.333-2.987 3.333-5.334zm-18-4v8h5.333L12 22.36V1.027L5.333 7.693H0z" id="speaker"/>
-                </svg>
+               
             </div>
             <div class="volume-controls hidden">
                 <div class="slider" data-direction="vertical">
@@ -75,75 +73,106 @@
     </div>
 </div>
 <style>
-  body {
-      margin: 0;
-      background-color: #f2f2f2; /* Couleur de fond de la page */
-      font-family: Arial, sans-serif;
-  }
-  
-  .audio-player {
-      width: 300px; /* Largeur du lecteur MP3 */
-      height: 60px; /* Hauteur du lecteur MP3 */
-      background-color: #333; /* Couleur de fond du lecteur (noir clair) */
-      border-radius: 30px; /* Coins arrondis */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre de la boîte */
-      display: flex;
-      align-items: center;
-      padding: 10px; /* Espacement intérieur */
-  }
+    /* Styles généraux pour le fond et la police */
+    body {
+        margin: 0;
+        background-color: #343a40; /* Fond sombre pour le corps de la page */
+        font-family: Arial, sans-serif;
+        color: #fff; /* Texte blanc pour une meilleure lisibilité sur fond sombre */
+    }
 
-  .audio-player .play-icon {
-      font-size: 24px;
-      color: #f2f2f2; /* Icône de lecture (couleur intérieure) */
-      background-color: #7b68ee; /* Fond de l'icône de lecture (violet) */
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
+    /* Personnalisation de la carte (card) */
+    .card {
+        background-color: #495057; /* Couleur de fond pour la carte */
+        border: none; /* Suppression de la bordure par défaut */
+    }
 
-  .audio-player .progress-bar {
-      flex-grow: 1;
-      height: 5px; /* Hauteur de la barre de progression */
-      background-color: #e0e0e0; /* Fond de la barre de progression (gris clair) */
-      border-radius: 2.5px; /* Coins arrondis de la barre de progression */
-      margin: 0 15px;
-  }
+    #songThumbnail {
+        width: 100%; /* Largeur de l'image de la carte */
+    }
 
-  .audio-player .progress-bar .progress {
-      height: 100%;
-      border-radius: 2.5px;
-      background-color: #7b68ee; /* Remplissage de la barre de progression (violet) */
-      width: 0%; /* Largeur initialisée à 0, devrait être contrôlée par JavaScript */
-  }
+    /* Titre de la chanson */
+    #songTitle {
+        padding: 10px; /* Espacement intérieur pour le titre */
+        text-align: center; /* Centrer le titre */
+    }
 
-  .audio-player .time {
-      font-size: 12px;
-      color: #f2f2f2; /* Couleur du texte du chronomètre */
-  }
+    /* Styles du lecteur audio personnalisé */
+    .green-audio-player {
+        background-color: #6c757d; /* Fond du lecteur audio */
+        border-radius: 10px; /* Coins arrondis pour le lecteur */
+        padding: 10px; /* Espacement intérieur pour le lecteur */
+        width: 90%; /* Largeur complète */
+        margin: 0 auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce pour le lecteur */
+        margin-top: 20px; /* Espace au-dessus du lecteur */
+    }
 
-  .audio-player .controls {
-      display: flex;
-      align-items: center;
-  }
+    .playButton, .pauseButton {
+        cursor: pointer; /* Curseur en forme de main lors du survol */
+    }
 
-  .audio-player .controls button {
-      background-color: transparent;
-      border: none;
-      margin: 0 5px; /* Espacement entre les boutons */
-      cursor: pointer;
-      outline: none;
-      font-size: 16px; /* Taille de la police des boutons */
-      color: #f2f2f2; /* Couleur des boutons (blanc cassé pour contraster avec le fond noir) */
-  }
+    /* Boutons de lecture/pause SVG */
+    .play-pause-icon {
+        fill: #adb5bd; /* Couleur des icônes (gris clair) */
+    }
 
-  .audio-player .controls button:hover {
-      background-color: #7b68ee; /* Couleur de fond au survol (violet) */
-      border-radius: 50%; /* Forme circulaire au survol */
-      padding: 5px; /* Espacement intérieur pour que le cercle semble plus grand */
-  }
+    /* Styles de la barre de volume et de progression */
+    .controls, .slider, .volume-controls {
+        display: flex;
+        align-items: center;
+    }
+
+    .slider, .volume-controls {
+        position: relative;
+        flex-grow: 1; /* La barre de progression prend tout l'espace possible */
+    }
+
+    /* Barre de progression */
+    .progress {
+        width: 100%;
+        height: 5px;
+        background-color: #ced4da; /* Fond de la barre de progression */
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    /* Bouton (pin) de la barre de progression */
+    .pin {
+        height: 15px;
+        width: 15px;
+        border-radius: 50%;
+        background-color: #20c997; /* Couleur du bouton de progression */
+        position: absolute;
+        top: -5px;
+        left: 0;
+        transform: translateX(-50%);
+    }
+    img, svg {
+    margin-top: 22px;
+    vertical-align: middle;
+}
+    /* Temps actuel et total */
+    .current-time, .total-time {
+        margin: 0 10px; /* Espacement autour du texte du temps */
+    }
+
+    /* Styles du bouton de volume */
+    
+
+    .volume-btn:hover {
+        fill: #f8f9fa; /* Couleur du bouton de volume au survol */
+    }
+
+    /* Masquer les contrôles de volume par défaut */
+    .volume-controls.hidden {
+        display: none;
+    }
+
+    /* Styles pour les icônes FontAwesome */
+    .fas {
+        color: #adb5bd; /* Couleur des icônes FontAwesome */
+    }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="player.js"></script>
