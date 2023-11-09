@@ -81,10 +81,11 @@
     // Fonction pour enregistrer la chanson dans le localStorage
     function saveSong(title, thumbnail, songURL, videoId) {
         var songs = JSON.parse(localStorage.getItem('songs') || '[]');
+        var thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
         songs.push({
             id: videoId,
             title: title,
-            thumbnail: thumbnail,
+            thumbnail: thumbnailUrl,
             url: songURL
         });
         localStorage.setItem('songs', JSON.stringify(songs));
@@ -96,45 +97,37 @@
         loadSongs();
     }
 
+    // Fonction pour charger et afficher les chansons
+// Fonction pour charger et afficher les chansons
 // Fonction pour charger et afficher les chansons
 function loadSongs() {
     var songs = JSON.parse(localStorage.getItem('songs') || '[]');
     var container = document.getElementById('songsContainer');
     container.innerHTML = '';
-    container.style.width = '250px';
-    container.style.height = '250px';
-    container.style.display = 'flex';
+    container.style.width = '550px';
+    container.style.height = '550px';
+    container.style.display = 'block';
 
 
     songs.forEach(function(song) {
-        var rowDiv = document.createElement('div');
-        rowDiv.className = 'row mb-3';
-        // Utilisez une URL de miniature de test pour vérifier que l'affichage fonctionne
-        var testThumbnailUrl = 'https://via.placeholder.com/150'; // URL de substitution pour le test
-        rowDiv.innerHTML = `
-            <div class="col">
-              <img src="${thumbnailUrl}" class="img-fluid song-thumbnail" alt="${song.title}" data-video-id="${song.id}">
-                <div class="song-title">${song.title}</div>
-            </div>
-        `;
+    var rowDiv = document.createElement('div');
+    rowDiv.className = 'row mb-3';
+    rowDiv.innerHTML = `
+        <div class="col">
+          <img src="${song.thumbnail}" class="img-fluid song-thumbnail" alt="${song.title}" data-video-id="${song.id}">
+            <div class="song-title">${song.title}</div>
+        </div>
+    `;
 
-        // Ajout de l'écouteur d'événement pour la redirection
-        rowDiv.querySelector('.song-thumbnail').addEventListener('click', function() {
-            window.location.href = `../player/player.html?videoId=${song.id}`;
-        });
-
-        container.appendChild(rowDiv);
+    // Ajout de l'écouteur d'événement pour la redirection
+    rowDiv.querySelector('.song-thumbnail').addEventListener('click', function() {
+        window.location.href = `../player/player.html?videoId=${song.id}`;
     });
+
+    container.appendChild(rowDiv);
+}); 
 }
 
-// Ajoutez la chanson de test dans le localStorage pour l'affichage
-var testSong = {
-    id: 'testVideoId',
-    title: 'Test Song',
-    thumbnailUrl: song.thumbnail,
-    url: 'https://www.example.com'
-};
-localStorage.setItem('songs', JSON.stringify([testSong]));
 
 // Assurez-vous que cette fonction est appelée après que l'utilisateur ait ajouté une chanson
 loadSongs();
