@@ -96,8 +96,6 @@
         loadSongs();
     }
 
-    // Fonction pour charger et afficher les chansons
-// Fonction pour charger et afficher les chansons
 // Fonction pour charger et afficher les chansons
 function loadSongs() {
     var songs = JSON.parse(localStorage.getItem('songs') || '[]');
@@ -115,7 +113,7 @@ function loadSongs() {
         var testThumbnailUrl = 'https://via.placeholder.com/150'; // URL de substitution pour le test
         rowDiv.innerHTML = `
             <div class="col">
-                <img src="${testThumbnailUrl}" class="img-fluid song-thumbnail" alt="${song.title}" data-video-id="${song.id}">
+              <img src="${thumbnailUrl}" class="img-fluid song-thumbnail" alt="${song.title}" data-video-id="${song.id}">
                 <div class="song-title">${song.title}</div>
             </div>
         `;
@@ -133,7 +131,7 @@ function loadSongs() {
 var testSong = {
     id: 'testVideoId',
     title: 'Test Song',
-    thumbnail: 'https://via.placeholder.com/150',
+    thumbnailUrl: song.thumbnail,
     url: 'https://www.example.com'
 };
 localStorage.setItem('songs', JSON.stringify([testSong]));

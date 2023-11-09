@@ -32,19 +32,16 @@ function fetchVideoDetails(videoId) {
 function updateThumbnailAndTitle(snippet) {
   const title = snippet.title;
   const thumbnailUrl = snippet.thumbnails.high.url;
-  
-  const imgElement = document.getElementById('songThumbnail') || document.createElement('img');
-  imgElement.id = 'songThumbnail';
+
+  let imgElement = document.getElementById('songThumbnail');
+  if (!imgElement) {
+    imgElement = document.createElement('img');
+    imgElement.id = 'songThumbnail';
+    document.querySelector('.card-body').appendChild(imgElement);
+  }
   imgElement.src = thumbnailUrl;
   imgElement.alt = title;
   imgElement.classList.add('card-img-top');
-
-  const cardBodyElement = document.querySelector('.card-body');
-  const oldImage = document.getElementById('songThumbnail');
-  if (oldImage) {
-    cardBodyElement.removeChild(oldImage);
-  }
-  cardBodyElement.insertBefore(imgElement, cardBodyElement.firstChild);
 
   document.getElementById('songTitle').textContent = title;
 }
@@ -54,27 +51,49 @@ function initializePlayer(videoId) {
     height: '0',
     width: '0',
     videoId: videoId,
-
     playerVars: {
-      'autoplay': 0,
-      'controls': 0,
-      'playsinline': 1
+      autoplay: 0,
+      controls: 1,
+      playsinline: 1
     },
     events: {
-      'onReady': onPlayerReady,
-      'onError': onPlayerError
+      onReady: onPlayerReady,
+      onError: onPlayerError
     }
   });
 }
 
 function onPlayerReady(event) {
-  document.getElementById('playButton').addEventListener('click', function() {
-    youtubePlayer.playVideo();
-  });
+  const playButton = document.getElementById('playButton');
+  const pauseButton = document.getElementById('pauseButton');
+  if (playButton) {
+    playButton.addEventListener('click', function() {
+      youtubePlayer.playVideo();
+    });
+  }
 
-  document.getElementById('pauseButton').addEventListener('click', function() {
-    youtubePlayer.pauseVideo();
-  });
+  if (pauseButton) {
+    pauseButton.addEventListener('click', function() {
+      youtubePlayer.pauseVideo();
+    });
+  }
+
+  document.querySelector('.total-time').textContent = formatTime(youtubePlayer.getDuration());
+
+  setInterval(updatePlayerUI, 1000);
+}
+
+function formatTime(timeInSeconds) {
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = Math.floor(timeInSeconds % 60);
+  return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+}
+
+function updatePlayerUI() {
+  const currentTime = youtubePlayer.getCurrentTime();
+  const duration = youtubePlayer.getDuration();
+  document.querySelector('.current-time').textContent = formatTime(currentTime);
+  document.querySelector('.total-time').textContent = formatTime(duration);
 }
 
 function onPlayerError(event) {
@@ -82,98 +101,65 @@ function onPlayerError(event) {
 }
 
 function toggleHeart(element) {
-    element.classList.toggle('filled'); // Basculer la classe pour changer l'apparence du cœur
-    if (element.classList.contains('filled')) {
-    }
+    element.classList.toggle('filled');
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
-  var playPauseButton = document.querySelector('.play-pause-icon');
-  var currentTimeElement = document.querySelector('.current-time');
-  var totalTimeElement = document.querySelector('.total-time');
-  var isPlaying = false;
-
-  // Mise à jour initiale du temps total (sera mis à jour après le chargement de la vidéo)
-  totalTimeElement.textContent = '0:00';
-
-  // Gestionnaire de clic pour le bouton de lecture/pause
-  playPauseButton.addEventListener('click', function() {
-    if (youtubePlayer && youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-      youtubePlayer.pauseVideo();
-      playPauseButton.setAttribute('d', 'M18 12L0 24V0'); // SVG path for 'play' icon
-      isPlaying = false;
-    } else if (youtubePlayer) {
-      youtubePlayer.playVideo();
-      playPauseButton.setAttribute('d', 'M0 0h6v24H0zM12 0h6v24h-6z'); // SVG path for 'pause' icon
-      isPlaying = true;
-    }
-  });
-
-  // Mise à jour de l'interface utilisateur avec l'état actuel de la vidéo
-  function updatePlayerUI() {
-    if (youtubePlayer) {
-      var currentTime = youtubePlayer.getCurrentTime();
-      var duration = youtubePlayer.getDuration();
-      currentTimeElement.textContent = formatTime(currentTime);
-      totalTimeElement.textContent = formatTime(duration);
-      // Mise à jour de la barre de progression si nécessaire
-    }
+  let isPlaying = false;
+  const playPauseButton = document.querySelector('.play-pause-icon');
+  if (playPauseButton) {
+    playPauseButton.addEventListener('click', function() {
+      if (youtubePlayer && youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+        youtubePlayer.pauseVideo();
+        playPauseButton.setAttribute('d', 'M18 12L0 24V0'); 
+        isPlaying = false;
+      } else if (youtubePlayer) {
+        youtubePlayer.playVideo();
+        playPauseButton.setAttribute('d', 'M0 0h6v24H0zM12 0h6v24h-6z'); 
+        isPlaying = true;
+      }
+    });
   }
-
-  // Fonction pour formater le temps en minutes:secondes
-  function formatTime(timeInSeconds) {
-    if (!isNaN(timeInSeconds)) {
-      var minutes = Math.floor(timeInSeconds / 60);
-      var seconds = Math.floor(timeInSeconds % 60);
-      return minutes + ':' + (seconds < 10 ? '0' + seconds : seconds);
-    }
-    return '0:00';
-  }
-
-  // Mettre à jour l'UI régulièrement
-  setInterval(updatePlayerUI, 1000);
 });
 
-
-// Intégrez ceci dans votre fonction onPlayerReady
-function onPlayerReady(event) {
-  // La mise à jour initiale du temps total doit être ici
-  var duration = youtubePlayer.getDuration();
-  document.querySelector('.total-time').textContent = formatTime(duration);
-
-  // Plus besoin d'ajouter des gestionnaires d'événements ici,
-  // car nous avons déjà ajouté l'écouteur d'événements ci-dessus
-}
-
-// Récupérer les éléments du DOM
 const volumeBtn = document.querySelector('.volume-btn');
 const volumeControls = document.querySelector('.volume-controls');
 const volumeSlider = document.querySelector('.slider');
 const volumePin = document.querySelector('#volume-pin');
 
-// Récupérer la vidéo  
-const video = document.querySelector('video');
+if (volumeBtn) {
+  volumeBtn.addEventListener('click', () => {
+    volumeControls.classList.toggle('hidden');
+  });
+}
 
-// Afficher/Masquer les contrôles du volume
-volumeBtn.addEventListener('click', () => {
-  volumeControls.classList.toggle('hidden');
-});
+if (volumeSlider) {
+  volumeSlider.addEventListener('input', (e) => {
+    const value = e.target.value;
+    if (youtubePlayer && youtubePlayer.setVolume) {
+      youtubePlayer.setVolume(value);
+    }
+  });
+}
 
-// Mettre à jour le volume lors du déplacement du slider
-volumeSlider.addEventListener('input', (e) => {
-  const value = e.target.value;
-  video.volume = value / 100;
-});
-
-// Mettre à jour la position du slider selon le volume
 const updateSlider = () => {
-  const volume = Math.round(video.volume * 100);
-  volumeSlider.value = volume;
-  volumePin.style.bottom = `${volume}%`;
+  if (youtubePlayer && youtubePlayer.getVolume) {
+    const volume = youtubePlayer.getVolume();
+    volumeSlider.value = volume;
+    volumePin.style.bottom = `${volume}%`;
+  }
 };
 
-video.addEventListener('volumechange', updateSlider);
+if (youtubePlayer) {
+  youtubePlayer.addEventListener('volumechange', updateSlider);
+}
 
-// Initialiser 
-updateSlider();
+function setInitialVolume() {
+  const initVolume = 100; // YouTube default volume
+  if (youtubePlayer && youtubePlayer.setVolume) {
+    youtubePlayer.setVolume(initVolume);
+  }
+  updateSlider();
+}
+
+setInitialVolume();
