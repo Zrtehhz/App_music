@@ -124,8 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const volumeBtn = document.querySelector('.volume-btn');
 const volumeControls = document.querySelector('.volume-controls');
-const volumeSlider = document.querySelector('.slider');
 const volumePin = document.querySelector('#volume-pin');
+
+var volumeSlider = document.getElementById('volume-slider');
+
+volumeSlider.addEventListener('input', function() {
+    var volume = this.value;
+    youtubePlayer.setVolume(volume);
+});
 
 if (volumeBtn) {
   volumeBtn.addEventListener('click', () => {
@@ -163,3 +169,5 @@ function setInitialVolume() {
 }
 
 setInitialVolume();
+
+

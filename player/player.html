@@ -8,7 +8,7 @@
     <title>App_music</title>
 </head>
 <body class="bg-dark">
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -60,13 +60,10 @@
         </div>
         <div class="volume">
             <div class="volume-btn">
-               
+                <i class="fas fa-volume-up"></i> 
             </div>
             <div class="volume-controls hidden">
-                <div class="slider" data-direction="vertical">
-                    <div class="progress">
-                        <div class="pin" id="volume-pin" data-method="changeVolume"></div>
-                    </div>
+        <input type="range" id="volume-slider" min="0" max="100" value="100">
                 </div>
             </div>
         </div>
@@ -143,7 +140,7 @@
         height: 15px;
         width: 15px;
         border-radius: 50%;
-        background-color: #20c997; /* Couleur du bouton de progression */
+        background-color: #870987; /* Couleur du bouton de progression */
         position: absolute;
         top: -5px;
         left: 0;
@@ -174,6 +171,44 @@
     .fas {
         color: #adb5bd; /* Couleur des icônes FontAwesome */
     }
+
+/* Styles généraux pour le curseur de volume */
+#volume-slider {
+    -webkit-appearance: none;  /* Override standard appearance */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 3px; /* Specified height */
+    background: #adb5bd; /* Background color */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (cross-browser) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+/* Style du curseur de volume lors du survol */
+#volume-slider:hover {
+    opacity: 1; /* Fully opaque */
+}
+
+/* Style du pouce du curseur de volume (handle) */
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override standard appearance */
+    appearance: none;
+    width: 15px; /* Largeur */
+    height: 15px; /* Hauteur */
+    border-radius: 50%; /* Forme circulaire */
+    background: #870987; /* Couleur de fond */
+    cursor: pointer; /* Cursor en forme de main */
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 15px; /* Largeur */
+    height: 15px; /* Hauteur */
+    border-radius: 50%; /* Forme circulaire */
+    background: #870987; /* Couleur de fond */
+    cursor: pointer; /* Cursor en forme de main */
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="player.js"></script>

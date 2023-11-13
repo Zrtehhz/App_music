@@ -9,7 +9,7 @@
 </head>
 
 <body class="bg-dark">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -27,8 +27,9 @@
     </div>
   </nav>
 
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#songModal">Ajouter une musique</button>
-  <div id="songsContainer" class="p-3"></div>
+  <div class="button-container">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#songModal">Ajouter une musique</button>
+</div>
 
   <div class="modal fade" id="songModal" tabindex="-1" aria-labelledby="songModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -51,7 +52,50 @@
   </div>
 
   <div id="songsContainer" class="p-3"></div>
+  <style>
+    .song-title {
+      color: white;
+      font-size: 1rem;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+  
+    .play-icon {
+      width: 24px;
+      height: 24px;
+      background: url('play-icon-url') no-repeat center center;
+      background-size: contain;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+  
+    .song-thumbnail-container {
+      position: relative;
+      width: 100%;
+      cursor: pointer;
+    }
+    .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 
+  }
+  .btn-primary {
+    background-color: rgb(128, 0, 119);
+    border-color: rgb(128, 0, 119);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: rgb(175, 8, 164); 
+    border-color: rgb(128, 0, 119);
+
+}
+
+  </style>
+  
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -63,25 +107,45 @@
     // Ajout d'une nouvelle musique
     var saveButton = document.getElementById('saveSong');
     saveButton.addEventListener('click', function() {
-        var songTitle = document.getElementById('songTitle').value;
-        var songThumbnail = document.getElementById('songThumbnail').value;
-        var songURL = document.getElementById('songURL').value;
-        
-        if (songURL) {
-            var videoId = extractVideoID(songURL); 
-            if (videoId) {
-                // Utilisez le titre et la miniature entrés par l'utilisateur
+    var songURL = document.getElementById('songURL').value;
+    
+    if (songURL) {
+        var videoId = extractVideoID(songURL);
+        if (videoId) {
+            getVideoDetails(videoId, function(videoDetails) {
+                var songTitle = videoDetails.title;
+                var songThumbnail = videoDetails.thumbnail;
                 saveSong(songTitle, songThumbnail, songURL, videoId);
-            } else {
-                console.error('L\'ID de la vidéo est invalide.');
-            }
+            });
+        } else {
+            console.error('L\'ID de la vidéo est invalide.');
         }
-    });
+    }
+});
+
+// Fonction pour obtenir les détails de la vidéo depuis l'API YouTube
+function getVideoDetails(videoId, callback) {
+    var apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`;
+
+    axios.get(apiUrl)
+        .then(function (response) {
+            var videoData = response.data.items[0].snippet;
+            var videoDetails = {
+                title: videoData.title,
+                thumbnail: videoData.thumbnails.high.url
+            };
+            callback(videoDetails);
+        })
+        .catch(function (error) {
+            console.error('Erreur lors de la récupération des détails de la vidéo :', error);
+        });
+}
+
 
     // Fonction pour enregistrer la chanson dans le localStorage
     function saveSong(title, thumbnail, songURL, videoId) {
         var songs = JSON.parse(localStorage.getItem('songs') || '[]');
-        var thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        var thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
         songs.push({
             id: videoId,
             title: title,
@@ -98,35 +162,32 @@
     }
 
     // Fonction pour charger et afficher les chansons
-// Fonction pour charger et afficher les chansons
-// Fonction pour charger et afficher les chansons
-function loadSongs() {
-    var songs = JSON.parse(localStorage.getItem('songs') || '[]');
-    var container = document.getElementById('songsContainer');
-    container.innerHTML = '';
-    container.style.width = '550px';
-    container.style.height = '550px';
-    container.style.display = 'block';
+    function loadSongs() {
+  var songs = JSON.parse(localStorage.getItem('songs') || '[]');
+  var container = document.getElementById('songsContainer');
+  container.innerHTML = '';
+  container.style.width = '400px';
+  container.style.height = '450px';
+  container.style.display = 'block';
 
-
-    songs.forEach(function(song) {
+  songs.forEach(function(song) {
     var rowDiv = document.createElement('div');
-    rowDiv.className = 'row mb-3';
+    rowDiv.className = 'row mb-3 song-thumbnail-container';
     rowDiv.innerHTML = `
-        <div class="col">
-          <img src="${song.thumbnail}" class="img-fluid song-thumbnail" alt="${song.title}" data-video-id="${song.id}">
-            <div class="song-title">${song.title}</div>
-        </div>
+      <img src="${song.thumbnail}" class="img-fluid" alt="${song.title}" data-video-id="${song.id}">
+      <div class="play-icon"></div>
+      <div class="song-title" style="color:white; font-weight: 700;">${song.title}</div>
     `;
 
     // Ajout de l'écouteur d'événement pour la redirection
-    rowDiv.querySelector('.song-thumbnail').addEventListener('click', function() {
-        window.location.href = `../player/player.html?videoId=${song.id}`;
+    rowDiv.addEventListener('click', function() {
+      window.location.href = `../player/player.html?videoId=${song.id}`;
     });
 
     container.appendChild(rowDiv);
-}); 
+  }); 
 }
+
 
 
 // Assurez-vous que cette fonction est appelée après que l'utilisateur ait ajouté une chanson

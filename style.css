@@ -30,3 +30,7 @@ p {
   justify-content: center;
 }
 
+hr {
+  height: 5px;
+  border: 1px solid #9400d3;
+}
