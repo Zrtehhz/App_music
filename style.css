@@ -3,7 +3,7 @@
     display: flex;
     width: 100%;
     background-color: #f9f9f9;
-    border: 5px solid #9400d3; 
+    border: 5px solid #c53dff; 
     margin-top: 15px;
   }
   
@@ -30,7 +30,8 @@ p {
   justify-content: center;
 }
 
-hr {
-  height: 5px;
-  border: 1px solid #9400d3;
+
+.hr {
+  opacity: 1;
+  border-top: 3px solid #870987;
 }

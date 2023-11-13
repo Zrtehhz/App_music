@@ -22,6 +22,7 @@
         </div>
     </div>
 </nav>
+<hr class="hr">
 
 <div class="container d-flex justify-content-center my-4 mb-5">
     <div id="mobile-box">
@@ -70,143 +71,133 @@
     </div>
 </div>
 <style>
-    /* Styles généraux pour le fond et la police */
-    body {
-        margin: 0;
-        background-color: #343a40; /* Fond sombre pour le corps de la page */
-        font-family: Arial, sans-serif;
-        color: #fff; /* Texte blanc pour une meilleure lisibilité sur fond sombre */
-    }
+body {
+    margin: 0;
+    background-color: #343a40;
+    font-family: Arial, sans-serif;
+    color: #fff;
+}
 
-    /* Personnalisation de la carte (card) */
-    .card {
-        background-color: #495057; /* Couleur de fond pour la carte */
-        border: none; /* Suppression de la bordure par défaut */
-    }
+.card {
+    background-color: #495057;
+    border: none;
+}
 
-    #songThumbnail {
-        width: 100%; /* Largeur de l'image de la carte */
-    }
+#songThumbnail {
+    width: 100%;
+}
 
-    /* Titre de la chanson */
-    #songTitle {
-        padding: 10px; /* Espacement intérieur pour le titre */
-        text-align: center; /* Centrer le titre */
-        color: #fff;
-    }
+#songTitle {
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+}
 
-    /* Styles du lecteur audio personnalisé */
-    .green-audio-player {
-        background-color: #6c757d; /* Fond du lecteur audio */
-        border-radius: 10px; /* Coins arrondis pour le lecteur */
-        padding: 10px; /* Espacement intérieur pour le lecteur */
-        width: 90%; /* Largeur complète */
-        margin: 0 auto;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce pour le lecteur */
-        margin-top: 20px; /* Espace au-dessus du lecteur */
-    }
+.green-audio-player {
+    background-color: #6c757d;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
 
-    .playButton, .pauseButton {
-        cursor: pointer; /* Curseur en forme de main lors du survol */
-    }
+.playButton, .pauseButton {
+    cursor: pointer;
+}
 
-    /* Boutons de lecture/pause SVG */
-    .play-pause-icon {
-        fill: #adb5bd; /* Couleur des icônes (gris clair) */
-    }
+.play-pause-icon {
+    fill: #adb5bd;
+}
 
-    /* Styles de la barre de volume et de progression */
-    .controls, .slider, .volume-controls {
-        display: flex;
-        align-items: center;
-    }
+.controls, .slider, .volume-controls {
+    display: flex;
+    align-items: center;
+}
 
-    .slider, .volume-controls {
-        position: relative;
-        flex-grow: 1; /* La barre de progression prend tout l'espace possible */
-    }
+.slider, .volume-controls {
+    position: relative;
+    flex-grow: 1;
+}
 
-    /* Barre de progression */
-    .progress {
-        width: 100%;
-        height: 5px;
-        background-color: #ced4da; /* Fond de la barre de progression */
-        border-radius: 3px;
-        cursor: pointer;
-    }
+.progress {
+    width: 100%;
+    height: 5px;
+    background-color: #ced4da;
+    border-radius: 3px;
+    cursor: pointer;
+}
 
-    /* Bouton (pin) de la barre de progression */
-    .pin {
-        height: 15px;
-        width: 15px;
-        border-radius: 50%;
-        background-color: #870987; /* Couleur du bouton de progression */
-        position: absolute;
-        top: -5px;
-        left: 0;
-        transform: translateX(-50%);
-    }
-    img, svg {
+.pin {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: #870987;
+    position: absolute;
+    top: -5px;
+    left: 0;
+    transform: translateX(-50%);
+}
+
+img, svg {
     margin-top: 22px;
     vertical-align: middle;
 }
-    /* Temps actuel et total */
-    .current-time, .total-time {
-        margin: 0 10px; /* Espacement autour du texte du temps */
-    }
 
-    /* Styles du bouton de volume */
-    
+.current-time, .total-time {
+    margin: 0 10px;
+}
 
-    .volume-btn:hover {
-        fill: #f8f9fa; /* Couleur du bouton de volume au survol */
-    }
+.volume-btn:hover {
+    fill: #f8f9fa;
+}
 
-    /* Masquer les contrôles de volume par défaut */
-    .volume-controls.hidden {
-        display: none;
-    }
+.volume-controls.hidden {
+    display: none;
+}
 
-    /* Styles pour les icônes FontAwesome */
-    .fas {
-        color: #adb5bd; /* Couleur des icônes FontAwesome */
-    }
+.fas {
+    color: #adb5bd;
+}
 
-/* Styles généraux pour le curseur de volume */
 #volume-slider {
-    -webkit-appearance: none;  /* Override standard appearance */
+    -webkit-appearance: none;
     appearance: none;
-    width: 100%; /* Full-width */
-    height: 3px; /* Specified height */
-    background: #adb5bd; /* Background color */
-    outline: none; /* Remove outline */
-    opacity: 0.7; /* Set transparency (cross-browser) */
-    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    width: 100%;
+    height: 3px;
+    background: #adb5bd;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
     transition: opacity .2s;
 }
 
-/* Style du curseur de volume lors du survol */
 #volume-slider:hover {
-    opacity: 1; /* Fully opaque */
+    opacity: 1;
 }
 
-/* Style du pouce du curseur de volume (handle) */
 #volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override standard appearance */
+    -webkit-appearance: none;
     appearance: none;
-    width: 15px; /* Largeur */
-    height: 15px; /* Hauteur */
-    border-radius: 50%; /* Forme circulaire */
-    background: #870987; /* Couleur de fond */
-    cursor: pointer; /* Cursor en forme de main */
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #870987;
+    cursor: pointer;
 }
 
 #volume-slider::-moz-range-thumb {
-    width: 15px; /* Largeur */
-    height: 15px; /* Hauteur */
-    border-radius: 50%; /* Forme circulaire */
-    background: #870987; /* Couleur de fond */
-    cursor: pointer; /* Cursor en forme de main */
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #870987;
+    cursor: pointer;
+}
+
+.hr {
+    opacity: 1;
+    border-top: 3px solid #870987;
 }
 
 </style>
