@@ -1,4 +1,3 @@
-// index.js
 
 
 async function fetchMusic() {

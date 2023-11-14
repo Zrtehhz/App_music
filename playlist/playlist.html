@@ -107,10 +107,8 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Remplacez 'YOUR_API_KEY' avec votre clé API YouTube
     const API_KEY = 'AIzaSyDFfCoDtVA0JvttwHsfkrcL_I-kbc39rOk';
     
-    // Ajout d'une nouvelle musique
     var saveButton = document.getElementById('saveSong');
     saveButton.addEventListener('click', function() {
     var songURL = document.getElementById('songURL').value;
@@ -129,7 +127,6 @@
     }
 });
 
-// Fonction pour obtenir les détails de la vidéo depuis l'API YouTube
 function getVideoDetails(videoId, callback) {
     var apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`;
 
@@ -148,7 +145,6 @@ function getVideoDetails(videoId, callback) {
 }
 
 
-    // Fonction pour enregistrer la chanson dans le localStorage
     function saveSong(title, thumbnail, songURL, videoId) {
         var songs = JSON.parse(localStorage.getItem('songs') || '[]');
         var thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
@@ -160,14 +156,12 @@ function getVideoDetails(videoId, callback) {
         });
         localStorage.setItem('songs', JSON.stringify(songs));
 
-        // Fermeture du modal et rafraîchissement de l'affichage des chansons
         var songModalEl = document.getElementById('songModal');
         var songModal = bootstrap.Modal.getInstance(songModalEl);
         songModal.hide();
         loadSongs();
     }
 
-    // Fonction pour charger et afficher les chansons
     function loadSongs() {
   var songs = JSON.parse(localStorage.getItem('songs') || '[]');
   var container = document.getElementById('songsContainer');
@@ -185,7 +179,6 @@ function getVideoDetails(videoId, callback) {
       <div class="song-title" style="color:white; font-weight: 700;">${song.title}</div>
     `;
 
-    // Ajout de l'écouteur d'événement pour la redirection
     rowDiv.addEventListener('click', function() {
       window.location.href = `../player/player.html?videoId=${song.id}`;
     });
@@ -196,11 +189,9 @@ function getVideoDetails(videoId, callback) {
 
 
 
-// Assurez-vous que cette fonction est appelée après que l'utilisateur ait ajouté une chanson
 loadSongs();
 
 
-    // Extraction de l'ID vidéo YouTube à partir de l'URL
     function extractVideoID(url) {
         var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
         var match = url.match(regExp);
